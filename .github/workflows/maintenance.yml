@@ -125,7 +125,7 @@ jobs:
         npm ls --depth=0 > dependency-tree.txt
 
     - name: 📤 Upload Dependency Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependency-report
         path: |
@@ -221,7 +221,7 @@ jobs:
         echo "- All algorithms performing within expected ranges" >> $GITHUB_STEP_SUMMARY
 
     - name: 📊 Store Performance History
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: performance-history-$(date +%Y%m%d)
         path: benchmark-results.txt
