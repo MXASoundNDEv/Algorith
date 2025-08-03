@@ -578,7 +578,7 @@ MIT © MXA.K
 
 - [Tests](./test/) - Suite de tests complète
 - [Algorithmes](./algorithms/) - Code source des algorithmes
-- [Issues](https://github.com/yourusername/algorith/issues) - Rapporter des bugs
+- [Issues](https://github.com/MXASoundNDEv/algorith/issues) - Rapporter des bugs
 - [NPM](https://www.npmjs.com/package/algorith) - Package NPM
 
 ## 📈 Changelog

@@ -27,8 +27,17 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
+    - name: 🧹 Clean NPM Cache
+      run: |
+        npm cache clean --force
+        echo "✅ NPM cache cleaned"
+
     - name: 📦 Install Dependencies
-      run: npm ci
+      run: |
+        # Installation propre pour éviter les problèmes de cache
+        rm -rf node_modules package-lock.json || true
+        npm install
+        npm ci
 
     - name: 🧪 Quick Tests
       run: |
