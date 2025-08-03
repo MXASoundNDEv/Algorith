@@ -1,0 +1,121 @@
+# Configuration des Labels GitHub pour Algorith
+
+- name: "algorithm"
+  color: "0052cc"
+  description: "Changes to similarity algorithms"
+
+- name: "random-engine"
+  color: "5319e7"
+  description: "Changes to RandomEngine functionality"
+
+- name: "performance"
+  color: "d4c5f9"
+  description: "Performance improvements or benchmarks"
+
+- name: "tests"
+  color: "0e8a16"
+  description: "Test related changes"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation updates"
+
+- name: "bug"
+  color: "d73a49"
+  description: "Something isn't working"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention is needed"
+
+- name: "question"
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Pull requests that update a dependency file"
+
+- name: "security"
+  color: "ee0701"
+  description: "Security related changes"
+
+- name: "breaking-change"
+  color: "b60205"
+  description: "Breaking changes that require major version bump"
+
+- name: "optimization"
+  color: "fbca04"
+  description: "Code optimization and refactoring"
+
+- name: "maintenance"
+  color: "fef2c0"
+  description: "Maintenance tasks and chores"
+
+- name: "ci/cd"
+  color: "1d76db"
+  description: "Continuous integration and deployment"
+
+- name: "priority: high"
+  color: "b60205"
+  description: "High priority issue"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Medium priority issue"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Low priority issue"
+
+- name: "status: needs-review"
+  color: "fbca04"
+  description: "Waiting for code review"
+
+- name: "status: in-progress"
+  color: "0052cc"
+  description: "Currently being worked on"
+
+- name: "status: blocked"
+  color: "d73a49"
+  description: "Blocked by other issues or dependencies"
+
+- name: "type: feature"
+  color: "84b6eb"
+  description: "New feature implementation"
+
+- name: "type: bugfix"
+  color: "fc2929"
+  description: "Bug fix"
+
+- name: "type: refactor"
+  color: "fbca04"
+  description: "Code refactoring"
+
+- name: "size: xs"
+  color: "c2e0c6"
+  description: "Extra small change (1-5 lines)"
+
+- name: "size: s"
+  color: "7cccc8"
+  description: "Small change (6-20 lines)"
+
+- name: "size: m"
+  color: "a8dadc"
+  description: "Medium change (21-50 lines)"
+
+- name: "size: l"
+  color: "f1faee"
+  description: "Large change (51-100 lines)"
+
+- name: "size: xl"
+  color: "e63946"
+  description: "Extra large change (100+ lines)"

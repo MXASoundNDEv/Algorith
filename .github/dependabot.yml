@@ -1,0 +1,72 @@
+# Configuration Dependabot pour mises à jour automatiques des dépendances
+
+version: 2
+updates:
+  # Mises à jour des dépendances NPM
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "automated"
+    assignees:
+      - "MXASoundNDEv"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    ignore:
+      # Ignorer les mises à jour majeures pour éviter les breaking changes
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Grouper les mises à jour mineures et de patch
+    groups:
+      dev-dependencies:
+        patterns:
+          - "mocha"
+          - "nyc"
+          - "@types/*"
+          - "*eslint*"
+          - "*prettier*"
+        update-types:
+          - "minor"
+          - "patch"
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "mocha"
+          - "nyc"
+          - "@types/*"
+          - "*eslint*"
+          - "*prettier*"
+        update-types:
+          - "patch"
+
+  # Mises à jour des GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "UTC"
+    labels:
+      - "ci/cd"
+      - "automated"
+    commit-message:
+      prefix: "ci:"
+      include: "scope"
+
+  # Surveillance des Dockerfiles (si ajoutés plus tard)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "docker"
+      - "automated"

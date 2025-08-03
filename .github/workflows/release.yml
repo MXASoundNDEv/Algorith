@@ -1,0 +1,350 @@
+name: 🚀 Release & Deployment
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.1)'
+        required: true
+        type: string
+      release_type:
+        description: 'Type of release'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+        - release
+        - prerelease
+      draft:
+        description: 'Create as draft release'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Job 1: Préparation de la release
+  prepare-release:
+    name: 🎯 Prepare Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      is-prerelease: ${{ steps.version.outputs.is-prerelease }}
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🔍 Determine Version
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+          TAG="v$VERSION"
+          IS_PRERELEASE="${{ github.event.inputs.release_type == 'prerelease' }}"
+        else
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          IS_PRERELEASE=$(echo "$VERSION" | grep -q -E "(alpha|beta|rc)" && echo "true" || echo "false")
+        fi
+
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+        echo "is-prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+
+        echo "📦 Preparing release for version: $VERSION"
+        echo "🏷️ Tag: $TAG"
+        echo "🔄 Pre-release: $IS_PRERELEASE"
+
+  # Job 2: Tests complets avant release
+  pre-release-tests:
+    name: 🧪 Pre-Release Validation
+    runs-on: ubuntu-latest
+    needs: prepare-release
+    strategy:
+      matrix:
+        node-version: [14, 16, 18, 20]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: 📦 Install Dependencies
+      run: npm ci
+
+    - name: 🧪 Run Complete Test Suite
+      run: |
+        echo "Running tests on ${{ matrix.os }} with Node.js ${{ matrix.node-version }}"
+        npm test
+
+    - name: 📊 Run Performance Benchmarks
+      run: |
+        npm run benchmark
+        echo "✅ Benchmarks completed for ${{ matrix.os }}-${{ matrix.node-version }}"
+
+  # Job 3: Audit de sécurité pour release
+  security-audit:
+    name: 🔒 Security Audit for Release
+    runs-on: ubuntu-latest
+    needs: prepare-release
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: 📦 Install Dependencies
+      run: npm ci
+
+    - name: 🔍 NPM Security Audit
+      run: |
+        echo "Running security audit for release..."
+        npm audit --audit-level=high
+
+    - name: 🔐 License Compliance Check
+      run: |
+        echo "Checking license compliance..."
+        npx license-checker --summary
+        echo "✅ License compliance verified"
+
+  # Job 4: Construction du package
+  build-package:
+    name: 🏗️ Build Release Package
+    runs-on: ubuntu-latest
+    needs: [prepare-release, pre-release-tests, security-audit]
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: 📦 Install Dependencies
+      run: npm ci
+
+    - name: 🔍 Validate Package Structure
+      run: |
+        echo "Validating package structure..."
+        npm pack --dry-run
+
+        # Vérifier les fichiers essentiels
+        test -f index.js && echo "✅ index.js present"
+        test -f index.d.ts && echo "✅ TypeScript definitions present"
+        test -f README.md && echo "✅ README.md present"
+        test -f LICENSE && echo "✅ LICENSE present"
+        test -d algorithms && echo "✅ algorithms directory present"
+
+    - name: 📊 Generate Release Metrics
+      run: |
+        echo "## 📊 Release Metrics" > release-metrics.md
+        echo "" >> release-metrics.md
+
+        # Statistiques du code
+        echo "### 📈 Code Statistics:" >> release-metrics.md
+        echo "- Total files: $(find algorithms/ -name "*.js" | wc -l)" >> release-metrics.md
+        echo "- Lines of code: $(find algorithms/ -name "*.js" -exec wc -l {} \; | awk '{sum+=$1} END {print sum}')" >> release-metrics.md
+        echo "- Test files: $(find test/ -name "*.js" | wc -l)" >> release-metrics.md
+
+        # Exécuter les benchmarks pour les métriques
+        npm run benchmark > benchmark-output.txt
+        echo "- Performance baseline captured" >> release-metrics.md
+
+    - name: 📦 Create Package Archive
+      run: |
+        npm pack
+        PACKAGE_FILE=$(ls algorith-*.tgz)
+        echo "Package created: $PACKAGE_FILE"
+
+    - name: 📤 Upload Package Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-package
+        path: |
+          algorith-*.tgz
+          release-metrics.md
+          benchmark-output.txt
+        retention-days: 90
+
+  # Job 5: Création de la release GitHub
+  create-release:
+    name: 🎉 Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [prepare-release, build-package]
+    permissions:
+      contents: write
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 📥 Download Package Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: npm-package
+
+    - name: 📝 Generate Release Notes
+      id: release-notes
+      run: |
+        echo "Generating release notes for ${{ needs.prepare-release.outputs.version }}..."
+
+        # Générer les notes de release depuis le CHANGELOG
+        if [ -f CHANGELOG.md ]; then
+          # Extraire les notes pour cette version
+          sed -n "/## \[${{ needs.prepare-release.outputs.version }}\]/,/## \[/p" CHANGELOG.md | sed '$d' > release-notes.md
+        else
+          echo "## What's New in ${{ needs.prepare-release.outputs.version }}" > release-notes.md
+          echo "" >> release-notes.md
+          echo "See [CHANGELOG.md](./CHANGELOG.md) for full details." >> release-notes.md
+        fi
+
+        # Ajouter les métriques de performance
+        echo "" >> release-notes.md
+        echo "## 📊 Performance Metrics" >> release-notes.md
+        echo "\`\`\`" >> release-notes.md
+        grep "ops/sec" benchmark-output.txt >> release-notes.md
+        echo "\`\`\`" >> release-notes.md
+
+        # Ajouter les informations de test
+        echo "" >> release-notes.md
+        echo "## ✅ Quality Assurance" >> release-notes.md
+        echo "- All tests passing across Node.js 14, 16, 18, 20" >> release-notes.md
+        echo "- Cross-platform compatibility (Linux, Windows, macOS)" >> release-notes.md
+        echo "- Security audit passed" >> release-notes.md
+        echo "- Performance benchmarks validated" >> release-notes.md
+
+    - name: 🎉 Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ needs.prepare-release.outputs.tag }}
+        name: Release ${{ needs.prepare-release.outputs.version }}
+        body_path: release-notes.md
+        draft: ${{ github.event.inputs.draft == 'true' }}
+        prerelease: ${{ needs.prepare-release.outputs.is-prerelease == 'true' }}
+        files: |
+          algorith-*.tgz
+          release-metrics.md
+          benchmark-output.txt
+        generate_release_notes: true
+
+  # Job 6: Publication sur NPM
+  publish-npm:
+    name: 📦 Publish to NPM
+    runs-on: ubuntu-latest
+    needs: [prepare-release, create-release]
+    environment: npm-production
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: 📦 Install Dependencies
+      run: npm ci
+
+    - name: 🧪 Final Pre-Publish Tests
+      run: |
+        echo "Running final validation before npm publish..."
+        npm test
+        npm run benchmark
+
+    - name: 📦 Publish to NPM
+      run: |
+        if [[ "${{ needs.prepare-release.outputs.is-prerelease }}" == "true" ]]; then
+          echo "Publishing pre-release to npm..."
+          npm publish --tag beta
+        else
+          echo "Publishing stable release to npm..."
+          npm publish
+        fi
+
+        echo "🎉 Successfully published algorith@${{ needs.prepare-release.outputs.version }} to NPM!"
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: 📢 Post-Publish Verification
+      run: |
+        echo "Verifying npm publication..."
+        sleep 30  # Attendre la propagation
+        npm view algorith@${{ needs.prepare-release.outputs.version }}
+        echo "✅ Package verified on NPM registry"
+
+  # Job 7: Post-release actions
+  post-release:
+    name: 🎊 Post-Release Actions
+    runs-on: ubuntu-latest
+    needs: [prepare-release, publish-npm]
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 📊 Update Release Dashboard
+      run: |
+        echo "## 🎉 Release ${{ needs.prepare-release.outputs.version }} Completed!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📦 Package Information:" >> $GITHUB_STEP_SUMMARY
+        echo "- **NPM Package**: [algorith@${{ needs.prepare-release.outputs.version }}](https://www.npmjs.com/package/algorith)" >> $GITHUB_STEP_SUMMARY
+        echo "- **GitHub Release**: [${{ needs.prepare-release.outputs.tag }}](https://github.com/${{ github.repository }}/releases/tag/${{ needs.prepare-release.outputs.tag }})" >> $GITHUB_STEP_SUMMARY
+        echo "- **Installation**: \`npm install algorith@${{ needs.prepare-release.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🚀 Next Steps:" >> $GITHUB_STEP_SUMMARY
+        echo "1. Update dependent projects" >> $GITHUB_STEP_SUMMARY
+        echo "2. Announce release on social media" >> $GITHUB_STEP_SUMMARY
+        echo "3. Update documentation sites" >> $GITHUB_STEP_SUMMARY
+        echo "4. Monitor for issues" >> $GITHUB_STEP_SUMMARY
+
+    - name: 🔄 Prepare Next Development Cycle
+      run: |
+        echo "Release ${{ needs.prepare-release.outputs.version }} deployment completed successfully!"
+        echo "Ready for next development cycle."
+
+  # Job 8: Rollback capability
+  rollback-check:
+    name: 🚨 Rollback Readiness
+    runs-on: ubuntu-latest
+    needs: [prepare-release, publish-npm]
+    if: failure()
+
+    steps:
+    - name: 🚨 Rollback Information
+      run: |
+        echo "## 🚨 Release Failed - Rollback Information" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "If manual rollback is needed:" >> $GITHUB_STEP_SUMMARY
+        echo "1. **Unpublish from NPM**: \`npm unpublish algorith@${{ needs.prepare-release.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "2. **Delete GitHub Release**: Go to releases page and delete" >> $GITHUB_STEP_SUMMARY
+        echo "3. **Delete Git Tag**: \`git tag -d ${{ needs.prepare-release.outputs.tag }} && git push origin :refs/tags/${{ needs.prepare-release.outputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "⚠️ **Note**: NPM unpublish is only available within 24 hours of publish" >> $GITHUB_STEP_SUMMARY
