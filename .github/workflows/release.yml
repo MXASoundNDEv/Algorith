@@ -189,7 +189,7 @@ jobs:
         echo "Package created: $PACKAGE_FILE"
 
     - name: 📤 Upload Package Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: npm-package
         path: |
@@ -213,7 +213,7 @@ jobs:
         fetch-depth: 0
 
     - name: 📥 Download Package Artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v3
       with:
         name: npm-package
 
@@ -266,7 +266,6 @@ jobs:
     name: 📦 Publish to NPM
     runs-on: ubuntu-latest
     needs: [prepare-release, create-release]
-    environment: npm-production
 
     steps:
     - name: 📥 Checkout Code
@@ -290,6 +289,15 @@ jobs:
 
     - name: 📦 Publish to NPM
       run: |
+        if [ -z "$NODE_AUTH_TOKEN" ]; then
+          echo "::warning::NPM_TOKEN secret is not configured. Skipping NPM publication."
+          echo "To enable NPM publishing:"
+          echo "1. Go to repository Settings > Secrets and variables > Actions"
+          echo "2. Add a new secret named 'NPM_TOKEN' with your NPM token"
+          echo "3. Re-run this workflow"
+          exit 0
+        fi
+
         if [[ "${{ needs.prepare-release.outputs.is-prerelease }}" == "true" ]]; then
           echo "Publishing pre-release to npm..."
           npm publish --tag beta
