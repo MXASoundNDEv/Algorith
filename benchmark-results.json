@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-08-03T20:07:55.636Z",
+  "timestamp": "2025-08-03T20:30:45.656Z",
   "environment": {
     "node": "v24.5.0",
     "platform": "linux",
     "arch": "x64",
     "memory": {
-      "rss": 1013641216,
+      "rss": 1013325824,
       "heapTotal": 1010880512,
-      "heapUsed": 853384304,
+      "heapUsed": 853297128,
       "external": 1498864,
       "arrayBuffers": 10479
     }
@@ -18,23 +18,23 @@
       "small": {
         "name": "Levenshtein (small)",
         "iterations": 10000,
-        "totalTime": 280.972593,
-        "avgTime": 0.028097259300000003,
-        "opsPerSecond": 35591
+        "totalTime": 297.117641,
+        "avgTime": 0.0297117641,
+        "opsPerSecond": 33657
       },
       "medium": {
         "name": "Levenshtein (medium)",
         "iterations": 5000,
-        "totalTime": 128.799492,
-        "avgTime": 0.025759898399999998,
-        "opsPerSecond": 38820
+        "totalTime": 116.290941,
+        "avgTime": 0.023258188200000002,
+        "opsPerSecond": 42996
       },
       "large": {
         "name": "Levenshtein (large)",
         "iterations": 1000,
-        "totalTime": 76.784016,
-        "avgTime": 0.076784016,
-        "opsPerSecond": 13024
+        "totalTime": 79.692689,
+        "avgTime": 0.079692689,
+        "opsPerSecond": 12548
       }
     },
     {
@@ -42,23 +42,23 @@
       "small": {
         "name": "Jaro-Winkler (small)",
         "iterations": 10000,
-        "totalTime": 47.799215,
-        "avgTime": 0.0047799215,
-        "opsPerSecond": 209208
+        "totalTime": 29.935095,
+        "avgTime": 0.0029935095,
+        "opsPerSecond": 334056
       },
       "medium": {
         "name": "Jaro-Winkler (medium)",
         "iterations": 5000,
-        "totalTime": 15.904878,
-        "avgTime": 0.0031809756,
-        "opsPerSecond": 314369
+        "totalTime": 10.159936,
+        "avgTime": 0.0020319872,
+        "opsPerSecond": 492129
       },
       "large": {
         "name": "Jaro-Winkler (large)",
         "iterations": 1000,
-        "totalTime": 7.066437,
-        "avgTime": 0.007066437,
-        "opsPerSecond": 141514
+        "totalTime": 7.893779,
+        "avgTime": 0.007893779,
+        "opsPerSecond": 126682
       }
     },
     {
@@ -66,23 +66,23 @@
       "small": {
         "name": "Jaro (small)",
         "iterations": 10000,
-        "totalTime": 43.639698,
-        "avgTime": 0.0043639698,
-        "opsPerSecond": 229149
+        "totalTime": 62.68251,
+        "avgTime": 0.006268251,
+        "opsPerSecond": 159534
       },
       "medium": {
         "name": "Jaro (medium)",
         "iterations": 5000,
-        "totalTime": 14.858064,
-        "avgTime": 0.0029716128,
-        "opsPerSecond": 336518
+        "totalTime": 16.662229,
+        "avgTime": 0.0033324458,
+        "opsPerSecond": 300080
       },
       "large": {
         "name": "Jaro (large)",
         "iterations": 1000,
-        "totalTime": 5.600515,
-        "avgTime": 0.0056005149999999995,
-        "opsPerSecond": 178555
+        "totalTime": 8.358648,
+        "avgTime": 0.008358648,
+        "opsPerSecond": 119637
       }
     },
     {
@@ -90,23 +90,23 @@
       "small": {
         "name": "Hamming (small)",
         "iterations": 10000,
-        "totalTime": 5.6092,
-        "avgTime": 0.00056092,
-        "opsPerSecond": 1782785
+        "totalTime": 13.877339,
+        "avgTime": 0.0013877339,
+        "opsPerSecond": 720599
       },
       "medium": {
         "name": "Hamming (medium)",
         "iterations": 5000,
-        "totalTime": 3.642501,
-        "avgTime": 0.0007285002,
-        "opsPerSecond": 1372683
+        "totalTime": 9.332857,
+        "avgTime": 0.0018665714000000002,
+        "opsPerSecond": 535742
       },
       "large": {
         "name": "Hamming (large)",
         "iterations": 1000,
-        "totalTime": 0.914231,
-        "avgTime": 0.000914231,
-        "opsPerSecond": 1093815
+        "totalTime": 0.81272,
+        "avgTime": 0.00081272,
+        "opsPerSecond": 1230436
       }
     },
     {
@@ -114,23 +114,23 @@
       "small": {
         "name": "Jaccard (small)",
         "iterations": 10000,
-        "totalTime": 79.949984,
-        "avgTime": 0.0079949984,
-        "opsPerSecond": 125078
+        "totalTime": 83.453516,
+        "avgTime": 0.0083453516,
+        "opsPerSecond": 119827
       },
       "medium": {
         "name": "Jaccard (medium)",
         "iterations": 5000,
-        "totalTime": 29.010821,
-        "avgTime": 0.0058021642,
-        "opsPerSecond": 172349
+        "totalTime": 41.074517,
+        "avgTime": 0.0082149034,
+        "opsPerSecond": 121730
       },
       "large": {
         "name": "Jaccard (large)",
         "iterations": 1000,
-        "totalTime": 10.762017,
-        "avgTime": 0.010762017,
-        "opsPerSecond": 92919
+        "totalTime": 13.644483,
+        "avgTime": 0.013644482999999999,
+        "opsPerSecond": 73290
       }
     },
     {
@@ -138,23 +138,23 @@
       "small": {
         "name": "Cosine (small)",
         "iterations": 10000,
-        "totalTime": 71.092571,
-        "avgTime": 0.0071092571,
-        "opsPerSecond": 140662
+        "totalTime": 104.266998,
+        "avgTime": 0.0104266998,
+        "opsPerSecond": 95908
       },
       "medium": {
         "name": "Cosine (medium)",
         "iterations": 5000,
-        "totalTime": 24.652506,
-        "avgTime": 0.0049305011999999995,
-        "opsPerSecond": 202819
+        "totalTime": 41.35211,
+        "avgTime": 0.008270422000000001,
+        "opsPerSecond": 120913
       },
       "large": {
         "name": "Cosine (large)",
         "iterations": 1000,
-        "totalTime": 6.945614,
-        "avgTime": 0.006945614,
-        "opsPerSecond": 143976
+        "totalTime": 16.906882,
+        "avgTime": 0.016906881999999998,
+        "opsPerSecond": 59148
       }
     },
     {
@@ -162,23 +162,23 @@
       "small": {
         "name": "Dice (small)",
         "iterations": 10000,
-        "totalTime": 40.655251,
-        "avgTime": 0.0040655251,
-        "opsPerSecond": 245971
+        "totalTime": 63.296338,
+        "avgTime": 0.0063296338,
+        "opsPerSecond": 157987
       },
       "medium": {
         "name": "Dice (medium)",
         "iterations": 5000,
-        "totalTime": 24.626451,
-        "avgTime": 0.0049252902,
-        "opsPerSecond": 203034
+        "totalTime": 30.596264,
+        "avgTime": 0.006119252800000001,
+        "opsPerSecond": 163419
       },
       "large": {
         "name": "Dice (large)",
         "iterations": 1000,
-        "totalTime": 6.734396,
-        "avgTime": 0.006734396,
-        "opsPerSecond": 148491
+        "totalTime": 27.632016,
+        "avgTime": 0.027632016,
+        "opsPerSecond": 36190
       }
     },
     {
@@ -186,96 +186,96 @@
       "small": {
         "name": "Trigram (small)",
         "iterations": 10000,
-        "totalTime": 37.135895,
-        "avgTime": 0.0037135895,
-        "opsPerSecond": 269281
+        "totalTime": 58.296715,
+        "avgTime": 0.0058296714999999995,
+        "opsPerSecond": 171536
       },
       "medium": {
         "name": "Trigram (medium)",
         "iterations": 5000,
-        "totalTime": 18.914341,
-        "avgTime": 0.0037828682,
-        "opsPerSecond": 264350
+        "totalTime": 14.81539,
+        "avgTime": 0.002963078,
+        "opsPerSecond": 337487
       },
       "large": {
         "name": "Trigram (large)",
         "iterations": 1000,
-        "totalTime": 13.650376,
-        "avgTime": 0.013650375999999999,
-        "opsPerSecond": 73258
+        "totalTime": 5.867739,
+        "avgTime": 0.005867739,
+        "opsPerSecond": 170423
       }
     }
   ],
   "compareAll": {
     "name": "compareAll",
     "iterations": 1000,
-    "totalTime": 66.494713,
-    "avgTime": 0.06649471300000001,
-    "opsPerSecond": 15039
+    "totalTime": 75.096216,
+    "avgTime": 0.075096216,
+    "opsPerSecond": 13316
   },
   "random": [
     {
       "name": "uniform()",
       "iterations": 100000,
-      "totalTime": 4.253819,
-      "avgTime": 0.00004253819,
-      "opsPerSecond": 23508287
+      "totalTime": 8.110148,
+      "avgTime": 0.00008110148,
+      "opsPerSecond": 12330231
     },
     {
       "name": "int(1, 100)",
       "iterations": 100000,
-      "totalTime": 9.738443,
-      "avgTime": 0.00009738443,
-      "opsPerSecond": 10268582
+      "totalTime": 7.009402,
+      "avgTime": 0.00007009402,
+      "opsPerSecond": 14266552
     },
     {
       "name": "bool()",
       "iterations": 100000,
-      "totalTime": 8.305799,
-      "avgTime": 0.00008305799,
-      "opsPerSecond": 12039781
+      "totalTime": 5.945307,
+      "avgTime": 0.00005945307,
+      "opsPerSecond": 16819989
     },
     {
       "name": "normal(0, 1)",
       "iterations": 100000,
-      "totalTime": 35.832379,
-      "avgTime": 0.00035832379,
-      "opsPerSecond": 2790772
+      "totalTime": 24.985825,
+      "avgTime": 0.00024985824999999997,
+      "opsPerSecond": 4002269
     },
     {
       "name": "exponential(1)",
       "iterations": 100000,
-      "totalTime": 18.408045,
-      "avgTime": 0.00018408045,
-      "opsPerSecond": 5432407
+      "totalTime": 14.742968,
+      "avgTime": 0.00014742968,
+      "opsPerSecond": 6782895
     },
     {
       "name": "randomString(10)",
       "iterations": 100000,
-      "totalTime": 310.156558,
-      "avgTime": 0.00310156558,
-      "opsPerSecond": 322418
+      "totalTime": 347.869562,
+      "avgTime": 0.0034786956199999997,
+      "opsPerSecond": 287464
     },
     {
       "name": "randomWord(5)",
       "iterations": 100000,
-      "totalTime": 167.181737,
-      "avgTime": 0.00167181737,
-      "opsPerSecond": 598151
+      "totalTime": 178.757829,
+      "avgTime": 0.0017875782899999999,
+      "opsPerSecond": 559416
     },
     {
       "name": "perlin1D(0.5)",
       "iterations": 100000,
-      "totalTime": 6.20243,
-      "avgTime": 0.0000620243,
-      "opsPerSecond": 16122713
+      "totalTime": 4.524027,
+      "avgTime": 0.00004524027,
+      "opsPerSecond": 22104201
     },
     {
       "name": "whiteNoise()",
       "iterations": 100000,
-      "totalTime": 6.490788,
-      "avgTime": 0.00006490788,
-      "opsPerSecond": 15406450
+      "totalTime": 6.229801,
+      "avgTime": 0.00006229801,
+      "opsPerSecond": 16051877
     }
   ]
 }

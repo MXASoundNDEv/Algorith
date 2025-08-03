@@ -1,7 +1,7 @@
 // randomEngine.js - moteur d'aléatoire avancé + bruit
 
 class RandomEngine {
-  constructor(seed = Date.now()) {
+  constructor(seed = Date.now() + Math.random() * 1000) {
     this.seed = seed;
     this.rand = this.mulberry32(seed);
     this.generateGradientTable();
@@ -109,7 +109,24 @@ class RandomEngine {
   static cryptoInt(min, max) {
     const range = max - min + 1;
     const rand = new Uint32Array(1);
-    crypto.getRandomValues(rand);
+
+    // Support cross-platform crypto
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(rand);
+    } else if (typeof require !== 'undefined') {
+      try {
+        const crypto = require('crypto');
+        const buffer = crypto.randomBytes(4);
+        rand[0] = buffer.readUInt32BE(0);
+      } catch (e) {
+        // Fallback pour les environnements sans crypto
+        rand[0] = Math.floor(Math.random() * 4294967296);
+      }
+    } else {
+      // Fallback ultime
+      rand[0] = Math.floor(Math.random() * 4294967296);
+    }
+
     return min + (rand[0] % range);
   }
 
