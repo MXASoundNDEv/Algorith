@@ -64,10 +64,114 @@ describe('Soundex Algorithm', () => {
         const f_code = soundex('F')[1];
         const p_code = soundex('P')[1];
         const v_code = soundex('V')[1];
-        
+
         // All should map to '1' or be handled consistently
         assert.strictEqual(b_code, f_code);
         assert.strictEqual(f_code, p_code);
         assert.strictEqual(p_code, v_code);
+    });
+
+    // Tests pour le support multilingue
+    describe('Multilingual Support', () => {
+        it('should work with English language (default)', () => {
+            assert.strictEqual(soundex('Robert'), 'R163');
+            assert.strictEqual(soundex('Robert', 'en'), 'R163');
+        });
+
+        it('should work with French language', () => {
+            assert.strictEqual(soundex('François', 'fr'), 'F652');
+            assert.strictEqual(soundex('Pierre', 'fr'), 'P600');
+            assert.strictEqual(soundex('Céline', 'fr'), 'C450');
+        });
+
+        it('should handle French accented characters', () => {
+            const result1 = soundex('François', 'fr');
+            const result2 = soundex('Francois', 'fr');
+            assert.strictEqual(result1, result2); // Should normalize accents
+        });
+
+        it('should handle French specific mappings', () => {
+            // In French, F and V map to 7 instead of 1
+            assert.strictEqual(soundex('François', 'fr')[1], '7');
+            assert.strictEqual(soundex('Vincent', 'fr')[1], '7');
+        });
+
+        it('should fallback to English for unknown languages', () => {
+            const englishResult = soundex('Robert', 'en');
+            const unknownResult = soundex('Robert', 'unknown');
+            assert.strictEqual(englishResult, unknownResult);
+        });
+    });
+
+    // Tests pour les cartes personnalisées
+    describe('Custom Mapping', () => {
+        it('should accept custom character mapping', () => {
+            const customMap = {
+                a: '', e: '', i: '', o: '', u: '',
+                b: 9, p: 9, // Custom mapping
+                c: 8, k: 8,
+                d: 7, t: 7
+            };
+
+            const result = soundex('Boat', null, customMap);
+            assert.strictEqual(result[0], 'B');
+            assert.strictEqual(result[1], '9'); // Should use custom mapping
+        });
+
+        it('should prioritize custom map over language map', () => {
+            const customMap = {
+                a: '', e: '', i: '', o: '', u: '',
+                r: 9, // Different from standard mapping
+                o: '', b: 1, e: '', r: 9, t: 3
+            };
+
+            const standardResult = soundex('Robert', 'en');
+            const customResult = soundex('Robert', 'en', customMap);
+            assert.notStrictEqual(standardResult, customResult);
+        });
+    });
+
+    // Tests pour la normalisation française
+    describe('French Normalization', () => {
+        it('should normalize ç to s', () => {
+            const result1 = soundex('François', 'fr');
+            const result2 = soundex('Francois', 'fr');
+            assert.strictEqual(result1, result2);
+        });
+
+        it('should normalize œ to e', () => {
+            const result1 = soundex('Cœur', 'fr');
+            const result2 = soundex('Ceur', 'fr');
+            assert.strictEqual(result1, result2);
+        });
+
+        it('should remove diacritics', () => {
+            const result1 = soundex('Élève', 'fr');
+            const result2 = soundex('Eleve', 'fr');
+            assert.strictEqual(result1, result2);
+        });
+    });
+
+    // Tests de régression
+    describe('Edge Cases', () => {
+        it('should handle null input', () => {
+            assert.strictEqual(soundex(null), 'Z000');
+        });
+
+        it('should handle undefined input', () => {
+            assert.strictEqual(soundex(undefined), 'Z000');
+        });
+
+        it('should handle numbers in strings', () => {
+            const result = soundex('Test123');
+            assert.strictEqual(result.length, 4);
+            assert.strictEqual(result[0], 'T');
+        });
+
+        it('should handle special characters', () => {
+            const result = soundex('Test-Name');
+            assert.strictEqual(result.length, 4);
+            assert.strictEqual(result[0], 'T');
+        });
     });
 });

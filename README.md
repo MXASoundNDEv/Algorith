@@ -170,20 +170,48 @@ trigramScore('abc', 'xyz');           // 0.0
 
 **Cas d'usage :** Analyse de séquences, comparaison de texte long.
 
-#### `soundex(string)`
+#### `soundex(string, language = 'en', customMap = null)`
 
-Génère le code Soundex d'une chaîne (algorithme phonétique).
+Génère le code Soundex d'une chaîne (algorithme phonétique) avec support multilingue.
+
+**Paramètres :**
+- `string` : La chaîne à encoder
+- `language` : Langue pour les règles spécifiques ('en' ou 'fr', défaut: 'en')
+- `customMap` : Carte de correspondance personnalisée (optionnel)
 
 ```javascript
 const { soundex } = require('algorith');
 
+// Usage basique (anglais par défaut)
 soundex('Robert');   // 'R163'
 soundex('Rupert');   // 'R163' (même son)
 soundex('Smith');    // 'S530'
 soundex('Smyth');    // 'S530' (même son)
+
+// Support français avec normalisation des accents
+soundex('François', 'fr');  // 'F652'
+soundex('Pierre', 'fr');    // 'P600' 
+soundex('Céline', 'fr');    // 'C450'
+
+// Les accents sont automatiquement normalisés en français
+soundex('François', 'fr') === soundex('Francois', 'fr'); // true
+
+// Carte personnalisée
+const customMap = {
+    a: '', e: '', i: '', o: '', u: '',
+    b: 9, p: 9, f: 9, v: 9,  // Groupement personnalisé
+    c: 8, k: 8, g: 8
+};
+soundex('Boat', 'en', customMap); // 'B900'
 ```
 
-**Cas d'usage :** Recherche phonétique, matching de noms.
+**Fonctionnalités :**
+- **Support multilingue** : Règles spécifiques pour l'anglais et le français
+- **Normalisation française** : Gestion automatique des accents (é→e, ç→s, œ→e)
+- **Cartes personnalisées** : Définition de vos propres règles de correspondance
+- **Compatibilité** : Fonctionne avec l'algorithme Soundex standard
+
+**Cas d'usage :** Recherche phonétique, matching de noms, détection de doublons phonétiques, indexation par similarité sonore.
 
 #### `compareAll(stringA, stringB)`
 
