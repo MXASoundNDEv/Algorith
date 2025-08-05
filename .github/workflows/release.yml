@@ -248,7 +248,7 @@ jobs:
         echo "- Performance benchmarks validated" >> release-notes.md
 
     - name: 🎉 Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.prepare-release.outputs.tag }}
         name: Release ${{ needs.prepare-release.outputs.version }}
