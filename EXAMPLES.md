@@ -683,4 +683,325 @@ party.members.forEach(member => {
 });
 ```
 
-Ces exemples montrent la polyvalence du module `algorith` dans différents domaines : recherche, analyse de données, génération procédurale, tests, et applications créatives. Chaque exemple peut être adapté et étendu selon vos besoins spécifiques.
+## 🔍 Autocomplétion et Recherche Prédictive
+
+### 1. Moteur d'Autocomplétion Simple
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+// Création avec dictionnaire personnalisé
+const languages = [
+  'javascript', 'java', 'python', 'php', 'ruby', 'go', 'rust',
+  'typescript', 'swift', 'kotlin', 'dart', 'scala', 'clojure'
+];
+
+const autocomplete = new AutocompleteEngine({
+  dictionary: languages,
+  maxSuggestions: 5
+});
+
+// Recherche d'autocomplétion
+function search(query) {
+  const suggestions = autocomplete.autocomplete(query);
+  return suggestions;
+}
+
+console.log(search('java')); // ['java', 'javascript']
+console.log(search('py'));   // ['python']
+console.log(search('type')); // ['typescript']
+```
+
+### 2. Système d'Autocomplétion avec Apprentissage
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+class LearningAutocomplete {
+  constructor() {
+    this.autocomplete = new AutocompleteEngine({
+      language: 'fr',
+      maxSuggestions: 10
+    });
+    this.searchHistory = new Map();
+  }
+
+  search(query) {
+    const suggestions = this.autocomplete.autocomplete(query);
+    
+    // Enregistrer la recherche
+    this.searchHistory.set(query, (this.searchHistory.get(query) || 0) + 1);
+    
+    return suggestions;
+  }
+
+  addUserTerm(term) {
+    // Ajouter des termes spécifiques utilisateur
+    this.autocomplete.addWord(term);
+    console.log(`Terme "${term}" ajouté au dictionnaire`);
+  }
+
+  getPopularSearches(limit = 5) {
+    return Array.from(this.searchHistory.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(entry => ({ query: entry[0], count: entry[1] }));
+  }
+}
+
+// Usage
+const smartAutocomplete = new LearningAutocomplete();
+
+// Ajout de termes métier
+smartAutocomplete.addUserTerm('algorithmique');
+smartAutocomplete.addUserTerm('heuristique');
+
+// Recherches
+console.log(smartAutocomplete.search('algo'));
+console.log(smartAutocomplete.search('heur'));
+
+// Statistiques
+console.log('Recherches populaires:', smartAutocomplete.getPopularSearches());
+```
+
+### 3. Barre de Recherche avec Autocomplétion
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+class SearchBar {
+  constructor(items) {
+    // Extraire tous les mots des items pour l'autocomplétion
+    const words = items.flatMap(item => 
+      item.toLowerCase().split(/\s+/)
+    );
+    
+    this.autocomplete = new AutocompleteEngine({
+      dictionary: [...new Set(words)], // Supprimer les doublons
+      maxSuggestions: 8
+    });
+    
+    this.items = items;
+  }
+
+  getSuggestions(query) {
+    if (!query || query.length < 2) return [];
+    
+    return this.autocomplete.autocomplete(query.toLowerCase());
+  }
+
+  search(query) {
+    const normalizedQuery = query.toLowerCase();
+    
+    return this.items.filter(item => 
+      item.toLowerCase().includes(normalizedQuery)
+    );
+  }
+
+  hybridSearch(query) {
+    const suggestions = this.getSuggestions(query);
+    const results = this.search(query);
+    
+    return {
+      suggestions,
+      results,
+      hasResults: results.length > 0,
+      hasSuggestions: suggestions.length > 0
+    };
+  }
+}
+
+// Usage avec une base de produits
+const products = [
+  'iPhone 15 Pro Max', 'Samsung Galaxy S24', 'Google Pixel 8',
+  'MacBook Air M3', 'Dell XPS 13', 'Surface Laptop 5',
+  'iPad Pro 12.9', 'Microsoft Surface Pro', 'Lenovo ThinkPad'
+];
+
+const searchBar = new SearchBar(products);
+
+console.log('Suggestions pour "iph":', searchBar.getSuggestions('iph'));
+console.log('Recherche hybride pour "mac":', searchBar.hybridSearch('mac'));
+```
+
+### 4. Autocomplétion Multi-langues
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+class MultiLanguageAutocomplete {
+  constructor() {
+    this.engines = {
+      fr: new AutocompleteEngine({ language: 'fr', maxSuggestions: 5 }),
+      en: new AutocompleteEngine({ language: 'en', maxSuggestions: 5 })
+    };
+    this.currentLanguage = 'fr';
+  }
+
+  setLanguage(lang) {
+    if (this.engines[lang]) {
+      this.currentLanguage = lang;
+      return true;
+    }
+    return false;
+  }
+
+  addCustomTerms(terms, language = null) {
+    const lang = language || this.currentLanguage;
+    if (this.engines[lang]) {
+      this.engines[lang].addWords(terms);
+    }
+  }
+
+  search(query, language = null) {
+    const lang = language || this.currentLanguage;
+    if (!this.engines[lang]) return [];
+    
+    return this.engines[lang].autocomplete(query);
+  }
+
+  searchAllLanguages(query) {
+    const results = {};
+    
+    Object.keys(this.engines).forEach(lang => {
+      const suggestions = this.engines[lang].autocomplete(query);
+      if (suggestions.length > 0) {
+        results[lang] = suggestions;
+      }
+    });
+    
+    return results;
+  }
+}
+
+// Usage
+const multiAutocomplete = new MultiLanguageAutocomplete();
+
+// Ajouter des termes techniques en français
+multiAutocomplete.addCustomTerms([
+  'algorithme', 'programmation', 'développement'
+], 'fr');
+
+// Ajouter des termes techniques en anglais
+multiAutocomplete.addCustomTerms([
+  'algorithm', 'programming', 'development'
+], 'en');
+
+console.log('FR - "algo":', multiAutocomplete.search('algo', 'fr'));
+console.log('EN - "algo":', multiAutocomplete.search('algo', 'en'));
+console.log('Tous - "prog":', multiAutocomplete.searchAllLanguages('prog'));
+```
+
+### 5. Autocomplétion pour IDE/Éditeur de Code
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+class CodeAutocomplete {
+  constructor() {
+    // Mots-clés JavaScript
+    const jsKeywords = [
+      'function', 'const', 'let', 'var', 'class', 'extends',
+      'import', 'export', 'default', 'async', 'await',
+      'return', 'if', 'else', 'for', 'while', 'try', 'catch'
+    ];
+
+    // APIs Web communes
+    const webApis = [
+      'document', 'window', 'console', 'fetch', 'setTimeout',
+      'getElementById', 'querySelector', 'addEventListener',
+      'createElement', 'appendChild', 'innerHTML', 'textContent'
+    ];
+
+    // Méthodes Array
+    const arrayMethods = [
+      'map', 'filter', 'reduce', 'forEach', 'find', 'findIndex',
+      'includes', 'indexOf', 'push', 'pop', 'slice', 'splice'
+    ];
+
+    this.autocomplete = new AutocompleteEngine({
+      dictionary: [...jsKeywords, ...webApis, ...arrayMethods],
+      maxSuggestions: 10
+    });
+
+    this.userDefinedSymbols = new Set();
+  }
+
+  addSymbol(symbol) {
+    if (!this.userDefinedSymbols.has(symbol)) {
+      this.autocomplete.addWord(symbol);
+      this.userDefinedSymbols.add(symbol);
+    }
+  }
+
+  addSymbols(symbols) {
+    symbols.forEach(symbol => this.addSymbol(symbol));
+  }
+
+  getSuggestions(partialCode) {
+    // Extraire le dernier mot/token
+    const matches = partialCode.match(/\w+$/);
+    if (!matches) return [];
+
+    const currentToken = matches[0];
+    return this.autocomplete.autocomplete(currentToken);
+  }
+
+  // Analyser le code pour extraire les symboles définis
+  analyzeCode(code) {
+    const patterns = [
+      /function\s+(\w+)/g,           // Fonctions
+      /const\s+(\w+)/g,             // Constantes
+      /let\s+(\w+)/g,               // Variables let
+      /var\s+(\w+)/g,               // Variables var
+      /class\s+(\w+)/g,             // Classes
+      /(\w+):\s*function/g,         // Méthodes d'objet
+    ];
+
+    const symbols = new Set();
+    
+    patterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.exec(code)) !== null) {
+        symbols.add(match[1]);
+      }
+    });
+
+    this.addSymbols(Array.from(symbols));
+    return Array.from(symbols);
+  }
+}
+
+// Usage
+const codeAutocomplete = new CodeAutocomplete();
+
+// Analyser du code pour extraire les symboles
+const sampleCode = `
+function calculateTotal(items) {
+  const taxRate = 0.1;
+  let subtotal = 0;
+  
+  for (const item of items) {
+    subtotal += item.price;
+  }
+  
+  return subtotal * (1 + taxRate);
+}
+
+class ShoppingCart {
+  constructor() {
+    this.items = [];
+  }
+  
+  addItem(item) {
+    this.items.push(item);
+  }
+}
+`;
+
+console.log('Symboles extraits:', codeAutocomplete.analyzeCode(sampleCode));
+console.log('Suggestions pour "calc":', codeAutocomplete.getSuggestions('calc'));
+console.log('Suggestions pour "console.":', codeAutocomplete.getSuggestions('console.'));
+```
+
+Ces exemples montrent la polyvalence du module `algorith` dans différents domaines : recherche, analyse de données, génération procédurale, tests, autocomplétion intelligente, et applications créatives. Chaque exemple peut être adapté et étendu selon vos besoins spécifiques.

@@ -20,7 +20,8 @@ const {
   jaroWinkler,
   hamming,
   compareAll,
-  RandomEngine
+  RandomEngine,
+  AutocompleteEngine
 } = require('algorith');
 
 // Comparaison de similarité
@@ -47,6 +48,11 @@ console.log(results);
 const rng = new RandomEngine(12345);
 console.log(rng.uniform(0, 10)); // 7.234
 console.log(rng.randomWord()); // "bakaru"
+
+// Autocomplétion intelligente
+const autocomplete = new AutocompleteEngine({ language: 'fr' });
+autocomplete.addWords(['javascript', 'java', 'python']);
+console.log(autocomplete.autocomplete('java')); // ['java', 'javascript']
 ```
 
 ## 📚 API Documentation
@@ -203,6 +209,60 @@ console.log(results);
 ```
 
 **Cas d'usage :** Analyse comparative, sélection du meilleur algorithme.
+
+### 🔤 AutocompleteEngine - Autocomplétion Intelligente
+
+Moteur d'autocomplétion basé sur une structure de données Trie, optimisé pour des suggestions rapides et pertinentes.
+
+#### Création d'une Instance
+
+```javascript
+const { AutocompleteEngine } = require('algorith');
+
+// Avec dictionnaire par défaut (français)
+const autocomplete = new AutocompleteEngine({ language: 'fr' });
+
+// Avec dictionnaire personnalisé
+const customAutocomplete = new AutocompleteEngine({
+  dictionary: ['javascript', 'java', 'python', 'php'],
+  maxSuggestions: 10
+});
+
+// Avec dictionnaire anglais
+const englishAutocomplete = new AutocompleteEngine({ language: 'en' });
+```
+
+#### Ajout de Mots
+
+```javascript
+// Ajouter un mot unique
+autocomplete.addWord('algorithme');
+
+// Ajouter plusieurs mots
+autocomplete.addWords(['programmation', 'développement', 'informatique']);
+
+console.log(`Dictionnaire contient ${autocomplete.getWordCount()} mots`);
+```
+
+#### Autocomplétion
+
+```javascript
+// Recherche basique
+const suggestions = autocomplete.autocomplete('algo');
+console.log(suggestions); // ['algorithme', 'algorithmique', ...]
+
+// Utilisation de l'alias search()
+const results = autocomplete.search('prog');
+console.log(results); // ['programmation', 'programme', ...]
+```
+
+#### Options de Configuration
+
+- `language` : `'fr'` | `'en'` - Langue du dictionnaire par défaut
+- `dictionary` : `string[]` | `string` - Tableau de mots ou chemin vers fichier
+- `maxSuggestions` : `number` - Nombre maximum de suggestions (défaut: 20)
+
+**Cas d'usage :** Barres de recherche, IDE, assistants de saisie, interfaces utilisateur.
 
 ### 🎲 RandomEngine - Génération Aléatoire Avancée
 
@@ -585,9 +645,10 @@ MIT © MXA.K
 
 ### v1.0.0
 - ✅ 8 algorithmes de similarité textuelle
+- ✅ Moteur AutocompleteEngine avec dictionnaires FR/EN
 - ✅ Moteur RandomEngine avec 20+ fonctions
-- ✅ 114 tests complets
-- ✅ Documentation complète
+- ✅ 134 tests complets
+- ✅ Documentation complète avec exemples
 - ✅ Support TypeScript (types inclus)
 
 ---
