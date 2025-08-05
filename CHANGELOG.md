@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-08-05
+
+### Added
+#### Moteur d'Autocomplétion
+- **AutocompleteEngine** - Moteur d'autocomplétion basé sur la structure Trie
+- **Support multi-langue** - Dictionnaires français et anglais intégrés
+- **API intuitive** - Méthodes `autocomplete()`, `search()`, `addWord()`, `addWords()`
+- **Performance optimisée** - Structure Trie pour recherches O(m) 
+- **Dictionnaires extensibles** - Format JSON pour faciliter l'ajout de langues
+- **Tests unitaires complets** - 174 tests couvrant tous les cas d'usage
+
+### Enhanced
+- **Documentation** - Exemples détaillés ajoutés dans README.md et EXAMPLES.md
+- **TypeScript** - Définitions complètes pour AutocompleteEngine
+- **API Export** - AutocompleteEngine exporté dans index.js
+
 ## [1.0.0] - 2025-08-03
 
 ### Added

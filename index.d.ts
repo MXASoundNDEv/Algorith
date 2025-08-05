@@ -312,3 +312,61 @@ export class RandomEngine {
      */
     mulberry32(seed: number): () => number;
 }
+
+export interface AutocompleteOptions {
+    /** Language for default dictionary ('fr' or 'en') */
+    language?: 'fr' | 'en' | string;
+    /** Custom dictionary array or path to dictionary file */
+    dictionary?: string[] | string | null;
+    /** Maximum number of suggestions to return */
+    maxSuggestions?: number;
+}
+
+/**
+ * Advanced autocomplete engine using Trie data structure
+ */
+export class AutocompleteEngine {
+    /** Current language setting */
+    readonly language: string;
+
+    /** Maximum number of suggestions */
+    readonly maxSuggestions: number;
+
+    /**
+     * Creates a new AutocompleteEngine instance
+     * @param options Configuration options
+     */
+    constructor(options?: AutocompleteOptions);
+
+    /**
+     * Adds a single word to the autocomplete dictionary
+     * @param word Word to add (will be normalized to lowercase)
+     */
+    addWord(word: string): void;
+
+    /**
+     * Adds multiple words to the autocomplete dictionary
+     * @param words Array of words to add
+     */
+    addWords(words: string[]): void;
+
+    /**
+     * Gets autocomplete suggestions for a given prefix
+     * @param prefix Text prefix to search for
+     * @returns Array of suggested completions
+     */
+    autocomplete(prefix: string): string[];
+
+    /**
+     * Alias for autocomplete method (for compatibility)
+     * @param prefix Text prefix to search for
+     * @returns Array of suggested completions
+     */
+    search(prefix: string): string[];
+
+    /**
+     * Returns the total number of words in the dictionary
+     * @returns Number of words in the dictionary
+     */
+    getWordCount(): number;
+}

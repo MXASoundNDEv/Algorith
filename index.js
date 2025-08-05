@@ -6,7 +6,9 @@ const jaccardSimilarity = require('./algorithms/jaccardSimilarity');
 const diceCoefficient = require('./algorithms/diceCoefficient');
 const jaro = require('./algorithms/jaro');
 const cosineSimilarity = require('./algorithms/cosineSimilarity');
+const soundex = require('./algorithms/soundex');
 const RandomEngine = require('./algorithms/RandomEngine');
+const AutocompleteEngine = require('./algorithms/autocomplete');
 
 function compareAll(a, b) {
     return {
@@ -30,6 +32,8 @@ module.exports = {
     diceCoefficient,
     jaro,
     cosineSimilarity,
+    soundex,
     RandomEngine,
+    AutocompleteEngine,
     compareAll
 };

@@ -1,6 +1,6 @@
 {
   "name": "algorith",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Collection complète d'algorithmes de similarité textuelle et moteur de génération aléatoire avancé",
   "main": "index.js",
   "types": "index.d.ts",
