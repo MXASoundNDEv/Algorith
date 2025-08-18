@@ -39,7 +39,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
@@ -76,7 +76,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 🔧 Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -114,7 +114,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
@@ -144,7 +144,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
@@ -208,7 +208,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
@@ -269,7 +269,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
@@ -325,7 +325,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 📊 Update Release Dashboard
       run: |
