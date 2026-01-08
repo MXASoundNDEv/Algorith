@@ -6,6 +6,95 @@
 
 > Collection complète d'algorithmes de similarité textuelle et moteur de génération aléatoire avancé
 
+## ✨ Fonctionnalités
+
+### 🔍 Algorithmes de Similarité Textuelle
+- **Levenshtein** - Distance d'édition avec insertions, suppressions et substitutions
+- **Jaro-Winkler** - Optimisé pour les préfixes communs (noms propres)
+- **Jaro** - Version de base sans bonus de préfixe
+- **Hamming** - Comparaison caractère par caractère (même longueur)
+- **Jaccard** - Similarité basée sur les ensembles de caractères
+- **Cosine** - Similarité cosinus des vecteurs de fréquence
+- **Dice Coefficient** - Basé sur les bigrammes communs
+- **Trigram Score** - Score de similarité par trigrammes
+- **Soundex** - Encodage phonétique (support multilingue: EN, FR)
+
+### 🎲 Génération Aléatoire (RandomEngine)
+#### Fonctions de Base
+- `uniform()` - Nombres aléatoires uniformes
+- `int()` - Entiers aléatoires dans un intervalle
+- `bool()` - Booléens aléatoires avec probabilité configurable
+- `pick()` - Sélection aléatoire d'un élément dans un tableau
+- `shuffle()` - Mélange Fisher-Yates d'un tableau
+
+#### Distributions Probabilistes
+- `normal()` - Distribution normale (Gaussienne)
+- `exponential()` - Distribution exponentielle
+- `poisson()` - Distribution de Poisson
+- `binomial()` - Distribution binomiale
+- `geometric()` - Distribution géométrique
+- `weighted()` - Sélection pondérée
+
+#### Génération de Texte
+- `randomChar()` - Caractères aléatoires (avec jeux de caractères personnalisés)
+- `randomString()` - Chaînes aléatoires de longueur donnée
+- `randomWord()` - Mots aléatoires basés sur des syllabes
+- `uuid()` - Génération d'UUID v4
+
+#### Fonctions de Bruit
+- `perlin1D()`, `perlin2D()`, `perlin3D()` - Bruit de Perlin (1D, 2D, 3D)
+- `valueNoise()` - Bruit de valeur
+- `whiteNoise()` - Bruit blanc
+- `pinkNoise()` - Bruit rose (1/f)
+
+#### Crypto Sécurisé
+- `cryptoInt()` - Entiers cryptographiquement sécurisés
+
+### 🔤 Autocomplétion Intelligente
+- **Recherche rapide** - Structure Trie pour recherches O(m)
+- **Support multilingue** - Dictionnaires français et anglais intégrés
+- **Extensible** - Ajout facile de dictionnaires personnalisés
+- **API simple** - `autocomplete()`, `addWord()`, `addWords()`
+
+### 🔧 Utilitaires
+- **fisherYatesShuffle** - Mélange aléatoire déterministe de tableaux
+- **compareAll** - Compare deux chaînes avec tous les algorithmes simultanément
+
+## ⚡ Performance des Algorithmes
+
+Benchmarks effectués sur Node.js v24.5.0 (Linux x64)
+
+### Algorithmes de Similarité
+
+| Algorithme       | Petites chaînes<br>(3-5 car.) | Chaînes moyennes<br>(20-30 car.) | Grandes chaînes<br>(100-200 car.) |
+| ---------------- | ----------------------------- | -------------------------------- | --------------------------------- |
+| **Hamming**      | **720,599 ops/s**             | **535,742 ops/s**                | **1,230,436 ops/s**               |
+| **Jaro-Winkler** | **334,056 ops/s**             | **492,129 ops/s**                | **126,682 ops/s**                 |
+| **Jaro**         | 159,534 ops/s                 | 300,080 ops/s                    | 119,637 ops/s                     |
+| **Trigram**      | 171,536 ops/s                 | 337,487 ops/s                    | 170,423 ops/s                     |
+| **Dice**         | 157,987 ops/s                 | 163,419 ops/s                    | 36,190 ops/s                      |
+| **Jaccard**      | 119,827 ops/s                 | 121,730 ops/s                    | 73,290 ops/s                      |
+| **Cosine**       | 95,908 ops/s                  | 120,913 ops/s                    | 59,148 ops/s                      |
+| **Levenshtein**  | 33,657 ops/s                  | 42,996 ops/s                     | 12,548 ops/s                      |
+
+**compareAll()** : 13,316 ops/s (compare avec tous les algorithmes simultanément)
+
+### RandomEngine
+
+| Fonction           | Performance      |
+| ------------------ | ---------------- |
+| `uniform()`        | 12,330,231 ops/s |
+| `perlin1D()`       | 22,104,201 ops/s |
+| `bool()`           | 16,819,989 ops/s |
+| `whiteNoise()`     | 16,051,877 ops/s |
+| `int(1, 100)`      | 14,266,552 ops/s |
+| `exponential(1)`   | 6,782,895 ops/s  |
+| `normal(0, 1)`     | 4,002,269 ops/s  |
+| `randomWord(5)`    | 559,416 ops/s    |
+| `randomString(10)` | 287,464 ops/s    |
+
+> **Note** : Les performances peuvent varier selon votre environnement d'exécution.
+
 ## 📦 Installation
 
 ```bash
