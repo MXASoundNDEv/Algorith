@@ -83,6 +83,14 @@ export function diceCoefficient(a: string, b: string): number;
 export function trigramScore(a: string, b: string): number;
 
 /**
+ * Shuffles an array using the Fisher-Yates algorithm
+ * @param array Input array
+ * @param random Optional random generator (default: Math.random)
+ * @returns New shuffled array
+ */
+export function fisherYatesShuffle<T>(array: T[], random?: () => number): T[];
+
+/**
  * Generates the Soundex code for a string with multilingual support
  * @param s Input string
  * @param lang Language code ('en' or 'fr', default: 'en')
