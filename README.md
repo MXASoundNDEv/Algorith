@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/algorith)](https://www.npmjs.com/package/algorith)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-114%20passing-brightgreen)](./test/)
+[![Tests](https://img.shields.io/badge/tests-115%20passing-brightgreen)](./test/)
 
 > Collection complète d'algorithmes de similarité textuelle et moteur de génération aléatoire avancé
 
@@ -21,7 +21,8 @@ const {
   hamming,
   compareAll,
   RandomEngine,
-  AutocompleteEngine
+  AutocompleteEngine,
+  fisherYatesShuffle
 } = require('algorith');
 
 // Comparaison de similarité
@@ -53,6 +54,11 @@ console.log(rng.randomWord()); // "bakaru"
 const autocomplete = new AutocompleteEngine({ language: 'fr' });
 autocomplete.addWords(['javascript', 'java', 'python']);
 console.log(autocomplete.autocomplete('java')); // ['java', 'javascript']
+
+// Mélange Fisher-Yates
+const numbers = [1, 2, 3, 4, 5];
+const shuffled = fisherYatesShuffle(numbers);
+console.log(shuffled); // [3, 1, 5, 2, 4]
 ```
 
 ## 📚 API Documentation
@@ -514,6 +520,20 @@ rng.fade(0.5);          // Fonction de lissage
 rng.lerp(0, 10, 0.5);   // Interpolation linéaire → 5
 ```
 
+### 🔀 Mélange Fisher-Yates
+
+Mélange un tableau en utilisant l'algorithme de Fisher-Yates.
+
+```javascript
+const { fisherYatesShuffle } = require('algorith');
+
+const items = ['a', 'b', 'c', 'd'];
+const shuffled = fisherYatesShuffle(items);
+
+console.log(items);   // ['a', 'b', 'c', 'd'] (non modifié)
+console.log(shuffled); // Mélange aléatoire
+```
+
 ## 🎯 Exemples d'Usage
 
 ### Détection de Doublons
@@ -607,7 +627,7 @@ const map = generateTerrain(100, 100);
 
 ## 🧪 Tests
 
-Le module inclut 114 tests complets :
+Le module inclut 115 tests complets :
 
 ```bash
 # Exécuter tous les tests
