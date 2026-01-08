@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-01-09
+
+### Added
+#### Algorithmes et Utilitaires
+- **Fisher-Yates Shuffle** - Algorithme de mélange aléatoire déterministe de tableaux
+  - Fonction standalone `fisherYatesShuffle()` exportée
+  - Support des générateurs aléatoires personnalisés (RNG)
+  - Tests unitaires complets avec validation du déterminisme
+  - Définitions TypeScript complètes
+
+#### Améliorations Soundex
+- **Support des cartes personnalisées** - Possibilité de passer des mappings de caractères personnalisés
+  - Paramètre `customMap` pour définir des encodages phonétiques spécifiques
+  - Priorité donnée aux custom maps sur les maps de langue
+  - Tests de validation des mappings personnalisés
+- **Support multilingue étendu** - Amélioration de la normalisation pour le français
+  - Normalisation des caractères accentués (é, è, ê, à, ù, etc.)
+  - Gestion du ç → s et œ → e
+  - Mappings spécifiques français (F et V → 7 au lieu de 1)
+  - Tests pour tous les cas de normalisation
+
+### Enhanced
+- **Documentation README** 
+  - Ajout d'un tableau de performance pour tous les algorithmes
+  - Section "Fonctionnalités" complète avec toutes les capacités de la bibliothèque
+  - Benchmarks détaillés (ops/s) pour petites, moyennes et grandes chaînes
+  - Performance du RandomEngine avec toutes ses fonctions
+- **Tests unitaires** - 152 tests passant (amélioration de la couverture)
+- **TypeScript** - Définitions mises à jour pour fisherYatesShuffle et Soundex
+
+### Fixed
+- **Soundex** - Correction de la logique pour les custom maps
+  - Le code de la première lettre est maintenant inclus uniquement avec customMap
+  - Tests corrigés pour Alfred/Olivier avec mappings français
+  - Conversion String() pour les codes numériques
+
 ## [1.0.1] - 2025-08-05
 
 ### Added
