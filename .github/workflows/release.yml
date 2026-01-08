@@ -226,6 +226,8 @@ jobs:
     name: 🎉 Create GitHub Release
     runs-on: ubuntu-latest
     needs: [prepare-release, build-package]
+    permissions:
+      contents: write    # Required to create releases
 
     steps:
     - name: 📥 Checkout Code
