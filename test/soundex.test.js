@@ -92,8 +92,9 @@ describe('Soundex Algorithm', () => {
 
         it('should handle French specific mappings', () => {
             // In French, F and V map to 7 instead of 1
-            assert.strictEqual(soundex('François', 'fr')[1], '7');
-            assert.strictEqual(soundex('Vincent', 'fr')[1], '7');
+            // Test with words where F/V appear after the first letter
+            assert.strictEqual(soundex('Alfred', 'fr')[2], '7'); // A-l-f-r-e-d → A476, [2] = '7'
+            assert.strictEqual(soundex('Olivier', 'fr')[2], '7'); // O-l-i-v-i-e-r → O476, [2] = '7'
         });
 
         it('should fallback to English for unknown languages', () => {

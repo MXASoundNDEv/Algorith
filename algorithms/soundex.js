@@ -39,10 +39,16 @@ module.exports = function soundex(s, lang = 'en', customMap = null) {
     const first = s[0].toUpperCase();
     let code = first;
 
+    // Pour les maps personnalisées uniquement, inclure le code de la première lettre
+    const firstDigit = map[s[0]] ?? '';
+    if (customMap && firstDigit !== '') {
+        code += String(firstDigit);
+    }
+
     let prev = map[s[0]] ?? '';
     for (let i = 1; i < s.length; i++) {
         const digit = map[s[i]] ?? '';
-        if (digit !== prev) code += digit;
+        if (digit !== '' && digit !== prev) code += String(digit);
         if (code.length === 4) break;
         if (digit !== '') prev = digit;
     }
