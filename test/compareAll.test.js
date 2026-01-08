@@ -12,6 +12,7 @@ describe('Compare All Algorithms', () => {
         assert(typeof algorithms.jaro === 'function');
         assert(typeof algorithms.cosineSimilarity === 'function');
         assert(typeof algorithms.RandomEngine === 'function'); // Constructor
+        assert(typeof algorithms.fisherYatesShuffle === 'function');
         assert(typeof algorithms.compareAll === 'function');
     });
 

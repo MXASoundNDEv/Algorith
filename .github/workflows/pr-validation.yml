@@ -1,0 +1,134 @@
+name: 🔍 PR Title Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  validate-title:
+    name: 📋 Validate PR Title Format
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔍 Validate PR Title
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+      run: |
+        echo "🔍 Validating PR title: '$PR_TITLE'"
+
+        # Pattern pour les conventions de commit
+        # Format: type(scope): description
+        if [[ "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|test|chore)(\([a-z0-9-]+\))?: .{1,50}$ ]]; then
+          echo "✅ PR title follows conventional format"
+          echo "## ✅ PR Title Validation" >> $GITHUB_STEP_SUMMARY
+          echo "Le titre de la PR suit les conventions du projet:" >> $GITHUB_STEP_SUMMARY
+          echo "\`$PR_TITLE\`" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ PR title should follow format: type(scope): description"
+          echo "Current title: $PR_TITLE"
+          echo ""
+          echo "Examples:"
+          echo "  feat(autocomplete): add new autocompletion engine"
+          echo "  fix(similarity): correct Levenshtein calculation"
+          echo "  docs(readme): update API documentation"
+          echo ""
+          echo "Valid types: feat, fix, docs, style, refactor, test, chore"
+
+          # Ajouter au résumé GitHub
+          echo "## ❌ PR Title Validation Failed" >> $GITHUB_STEP_SUMMARY
+          echo "Le titre de la PR ne suit pas les conventions:" >> $GITHUB_STEP_SUMMARY
+          echo "\`$PR_TITLE\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Format attendu:" >> $GITHUB_STEP_SUMMARY
+          echo "\`type(scope): description\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Exemples valides:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`feat(autocomplete): add new autocompletion engine\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`fix(similarity): correct Levenshtein calculation\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`docs(readme): update API documentation\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔧 Types valides:" >> $GITHUB_STEP_SUMMARY
+          echo "\`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`test\`, \`chore\`" >> $GITHUB_STEP_SUMMARY
+
+          exit 1
+        fi
+
+  suggest-labels:
+    name: 🏷️ Suggest PR Labels
+    runs-on: ubuntu-latest
+    needs: validate-title
+    if: success()
+
+    steps:
+    - name: 🏷️ Analyze PR and Suggest Labels
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_BODY: ${{ github.event.pull_request.body }}
+      run: |
+        echo "🏷️ Analyzing PR for label suggestions..."
+        echo "## 🏷️ Suggested Labels" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Extraire le type du titre
+        if [[ "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|test|chore) ]]; then
+          TYPE="${BASH_REMATCH[1]}"
+          echo "📌 Type: \`$TYPE\`" >> $GITHUB_STEP_SUMMARY
+
+          case $TYPE in
+            "feat")
+              echo "- \`enhancement\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`feature\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "fix")
+              echo "- \`bug\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`fix\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "docs")
+              echo "- \`documentation\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "test")
+              echo "- \`testing\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "refactor")
+              echo "- \`refactoring\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "style")
+              echo "- \`style\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "chore")
+              echo "- \`maintenance\`" >> $GITHUB_STEP_SUMMARY
+              ;;
+          esac
+        fi
+
+        # Extraire le scope du titre
+        if [[ "$PR_TITLE" =~ \(([a-z0-9-]+)\) ]]; then
+          SCOPE="${BASH_REMATCH[1]}"
+          echo "🎯 Scope: \`$SCOPE\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`$SCOPE\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Analyser le contenu pour des labels supplémentaires
+        CONTENT="$PR_TITLE $PR_BODY"
+
+        if [[ $CONTENT =~ (test|testing|unit.test|integration.test) ]]; then
+          echo "- \`testing\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        if [[ $CONTENT =~ (performance|benchmark|optimization|faster) ]]; then
+          echo "- \`performance\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        if [[ $CONTENT =~ (breaking.change|breaking|major) ]]; then
+          echo "- \`breaking-change\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        if [[ $CONTENT =~ (security|vulnerability|CVE) ]]; then
+          echo "- \`security\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "💡 **Note**: Les labels doivent être ajoutés manuellement par un maintainer ayant les permissions appropriées." >> $GITHUB_STEP_SUMMARY

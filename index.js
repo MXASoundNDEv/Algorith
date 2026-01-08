@@ -9,6 +9,7 @@ const cosineSimilarity = require('./algorithms/cosineSimilarity');
 const soundex = require('./algorithms/soundex');
 const RandomEngine = require('./algorithms/RandomEngine');
 const AutocompleteEngine = require('./algorithms/autocomplete');
+const fisherYatesShuffle = require('./algorithms/fisherYatesShuffle');
 
 function compareAll(a, b) {
     return {
@@ -35,5 +36,6 @@ module.exports = {
     soundex,
     RandomEngine,
     AutocompleteEngine,
+    fisherYatesShuffle,
     compareAll
 };

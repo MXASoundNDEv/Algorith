@@ -2,9 +2,98 @@
 
 [![npm version](https://img.shields.io/npm/v/algorith)](https://www.npmjs.com/package/algorith)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-114%20passing-brightgreen)](./test/)
+[![Tests](https://img.shields.io/badge/tests-115%20passing-brightgreen)](./test/)
 
 > Collection complète d'algorithmes de similarité textuelle et moteur de génération aléatoire avancé
+
+## ✨ Fonctionnalités
+
+### 🔍 Algorithmes de Similarité Textuelle
+- **Levenshtein** - Distance d'édition avec insertions, suppressions et substitutions
+- **Jaro-Winkler** - Optimisé pour les préfixes communs (noms propres)
+- **Jaro** - Version de base sans bonus de préfixe
+- **Hamming** - Comparaison caractère par caractère (même longueur)
+- **Jaccard** - Similarité basée sur les ensembles de caractères
+- **Cosine** - Similarité cosinus des vecteurs de fréquence
+- **Dice Coefficient** - Basé sur les bigrammes communs
+- **Trigram Score** - Score de similarité par trigrammes
+- **Soundex** - Encodage phonétique (support multilingue: EN, FR)
+
+### 🎲 Génération Aléatoire (RandomEngine)
+#### Fonctions de Base
+- `uniform()` - Nombres aléatoires uniformes
+- `int()` - Entiers aléatoires dans un intervalle
+- `bool()` - Booléens aléatoires avec probabilité configurable
+- `pick()` - Sélection aléatoire d'un élément dans un tableau
+- `shuffle()` - Mélange Fisher-Yates d'un tableau
+
+#### Distributions Probabilistes
+- `normal()` - Distribution normale (Gaussienne)
+- `exponential()` - Distribution exponentielle
+- `poisson()` - Distribution de Poisson
+- `binomial()` - Distribution binomiale
+- `geometric()` - Distribution géométrique
+- `weighted()` - Sélection pondérée
+
+#### Génération de Texte
+- `randomChar()` - Caractères aléatoires (avec jeux de caractères personnalisés)
+- `randomString()` - Chaînes aléatoires de longueur donnée
+- `randomWord()` - Mots aléatoires basés sur des syllabes
+- `uuid()` - Génération d'UUID v4
+
+#### Fonctions de Bruit
+- `perlin1D()`, `perlin2D()`, `perlin3D()` - Bruit de Perlin (1D, 2D, 3D)
+- `valueNoise()` - Bruit de valeur
+- `whiteNoise()` - Bruit blanc
+- `pinkNoise()` - Bruit rose (1/f)
+
+#### Crypto Sécurisé
+- `cryptoInt()` - Entiers cryptographiquement sécurisés
+
+### 🔤 Autocomplétion Intelligente
+- **Recherche rapide** - Structure Trie pour recherches O(m)
+- **Support multilingue** - Dictionnaires français et anglais intégrés
+- **Extensible** - Ajout facile de dictionnaires personnalisés
+- **API simple** - `autocomplete()`, `addWord()`, `addWords()`
+
+### 🔧 Utilitaires
+- **fisherYatesShuffle** - Mélange aléatoire déterministe de tableaux
+- **compareAll** - Compare deux chaînes avec tous les algorithmes simultanément
+
+## ⚡ Performance des Algorithmes
+
+Benchmarks effectués sur Node.js v24.5.0 (Linux x64)
+
+### Algorithmes de Similarité
+
+| Algorithme       | Petites chaînes<br>(3-5 car.) | Chaînes moyennes<br>(20-30 car.) | Grandes chaînes<br>(100-200 car.) |
+| ---------------- | ----------------------------- | -------------------------------- | --------------------------------- |
+| **Hamming**      | **720,599 ops/s**             | **535,742 ops/s**                | **1,230,436 ops/s**               |
+| **Jaro-Winkler** | **334,056 ops/s**             | **492,129 ops/s**                | **126,682 ops/s**                 |
+| **Jaro**         | 159,534 ops/s                 | 300,080 ops/s                    | 119,637 ops/s                     |
+| **Trigram**      | 171,536 ops/s                 | 337,487 ops/s                    | 170,423 ops/s                     |
+| **Dice**         | 157,987 ops/s                 | 163,419 ops/s                    | 36,190 ops/s                      |
+| **Jaccard**      | 119,827 ops/s                 | 121,730 ops/s                    | 73,290 ops/s                      |
+| **Cosine**       | 95,908 ops/s                  | 120,913 ops/s                    | 59,148 ops/s                      |
+| **Levenshtein**  | 33,657 ops/s                  | 42,996 ops/s                     | 12,548 ops/s                      |
+
+**compareAll()** : 13,316 ops/s (compare avec tous les algorithmes simultanément)
+
+### RandomEngine
+
+| Fonction           | Performance      |
+| ------------------ | ---------------- |
+| `uniform()`        | 12,330,231 ops/s |
+| `perlin1D()`       | 22,104,201 ops/s |
+| `bool()`           | 16,819,989 ops/s |
+| `whiteNoise()`     | 16,051,877 ops/s |
+| `int(1, 100)`      | 14,266,552 ops/s |
+| `exponential(1)`   | 6,782,895 ops/s  |
+| `normal(0, 1)`     | 4,002,269 ops/s  |
+| `randomWord(5)`    | 559,416 ops/s    |
+| `randomString(10)` | 287,464 ops/s    |
+
+> **Note** : Les performances peuvent varier selon votre environnement d'exécution.
 
 ## 📦 Installation
 
@@ -21,7 +110,8 @@ const {
   hamming,
   compareAll,
   RandomEngine,
-  AutocompleteEngine
+  AutocompleteEngine,
+  fisherYatesShuffle
 } = require('algorith');
 
 // Comparaison de similarité
@@ -53,6 +143,11 @@ console.log(rng.randomWord()); // "bakaru"
 const autocomplete = new AutocompleteEngine({ language: 'fr' });
 autocomplete.addWords(['javascript', 'java', 'python']);
 console.log(autocomplete.autocomplete('java')); // ['java', 'javascript']
+
+// Mélange Fisher-Yates
+const numbers = [1, 2, 3, 4, 5];
+const shuffled = fisherYatesShuffle(numbers);
+console.log(shuffled); // [3, 1, 5, 2, 4]
 ```
 
 ## 📚 API Documentation
@@ -170,20 +265,48 @@ trigramScore('abc', 'xyz');           // 0.0
 
 **Cas d'usage :** Analyse de séquences, comparaison de texte long.
 
-#### `soundex(string)`
+#### `soundex(string, language = 'en', customMap = null)`
 
-Génère le code Soundex d'une chaîne (algorithme phonétique).
+Génère le code Soundex d'une chaîne (algorithme phonétique) avec support multilingue.
+
+**Paramètres :**
+- `string` : La chaîne à encoder
+- `language` : Langue pour les règles spécifiques ('en' ou 'fr', défaut: 'en')
+- `customMap` : Carte de correspondance personnalisée (optionnel)
 
 ```javascript
 const { soundex } = require('algorith');
 
+// Usage basique (anglais par défaut)
 soundex('Robert');   // 'R163'
 soundex('Rupert');   // 'R163' (même son)
 soundex('Smith');    // 'S530'
 soundex('Smyth');    // 'S530' (même son)
+
+// Support français avec normalisation des accents
+soundex('François', 'fr');  // 'F652'
+soundex('Pierre', 'fr');    // 'P600' 
+soundex('Céline', 'fr');    // 'C450'
+
+// Les accents sont automatiquement normalisés en français
+soundex('François', 'fr') === soundex('Francois', 'fr'); // true
+
+// Carte personnalisée
+const customMap = {
+    a: '', e: '', i: '', o: '', u: '',
+    b: 9, p: 9, f: 9, v: 9,  // Groupement personnalisé
+    c: 8, k: 8, g: 8
+};
+soundex('Boat', 'en', customMap); // 'B900'
 ```
 
-**Cas d'usage :** Recherche phonétique, matching de noms.
+**Fonctionnalités :**
+- **Support multilingue** : Règles spécifiques pour l'anglais et le français
+- **Normalisation française** : Gestion automatique des accents (é→e, ç→s, œ→e)
+- **Cartes personnalisées** : Définition de vos propres règles de correspondance
+- **Compatibilité** : Fonctionne avec l'algorithme Soundex standard
+
+**Cas d'usage :** Recherche phonétique, matching de noms, détection de doublons phonétiques, indexation par similarité sonore.
 
 #### `compareAll(stringA, stringB)`
 
@@ -486,6 +609,20 @@ rng.fade(0.5);          // Fonction de lissage
 rng.lerp(0, 10, 0.5);   // Interpolation linéaire → 5
 ```
 
+### 🔀 Mélange Fisher-Yates
+
+Mélange un tableau en utilisant l'algorithme de Fisher-Yates.
+
+```javascript
+const { fisherYatesShuffle } = require('algorith');
+
+const items = ['a', 'b', 'c', 'd'];
+const shuffled = fisherYatesShuffle(items);
+
+console.log(items);   // ['a', 'b', 'c', 'd'] (non modifié)
+console.log(shuffled); // Mélange aléatoire
+```
+
 ## 🎯 Exemples d'Usage
 
 ### Détection de Doublons
@@ -579,7 +716,7 @@ const map = generateTerrain(100, 100);
 
 ## 🧪 Tests
 
-Le module inclut 114 tests complets :
+Le module inclut 115 tests complets :
 
 ```bash
 # Exécuter tous les tests
