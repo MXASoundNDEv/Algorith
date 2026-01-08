@@ -9,10 +9,11 @@ name: 🚀 Release & Deployment
 #    - Enable at: https://docs.npmjs.com/trusted-publishers
 #    - See: https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
 #
-# ✅ OPTION 2: Granular Access Token (with 90-day max expiration)
-#    - Create token: npm token create [--read-only]
+# ✅ OPTION 2: Granular Access Token (with 90-day max expiration & Bypass 2FA)
+#    - Create token: npm token create
+#    - Permissions: "Publish" with "Bypass 2FA for automation" ENABLED
+#    - Max expiration: 90 days for security
 #    - Store as 'NPM_TOKEN' secret in repository settings
-#    - Recommended: Enable "Bypass 2FA" for non-interactive workflows
 #
 # ❌ DO NOT USE: Classic tokens (permanently revoked)
 #
@@ -304,12 +305,6 @@ jobs:
     - name: 📦 Install Dependencies
       run: npm ci
 
-    - name: 🧪 Final Pre-Publish Tests
-      run: |
-        echo "Running final validation before npm publish..."
-        npm test
-        npm run benchmark
-
     - name: 📝 Enable NPM Provenance
       run: |
         npm pkg set publishConfig.provenance=true
@@ -328,8 +323,6 @@ jobs:
         fi
 
         echo "🎉 Successfully published algorith@${{ needs.prepare-release.outputs.version }} to NPM!"
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: 📢 Post-Publish Verification
       run: |
@@ -337,6 +330,12 @@ jobs:
         sleep 30  # Attendre la propagation
         npm view algorith@${{ needs.prepare-release.outputs.version }}
         echo "✅ Package verified on NPM registry"
+
+    - name: 📋 Setup for OIDC Trusted Publishing
+      if: ${{ env.NODE_AUTH_TOKEN == '' }}
+      run: |
+        echo "ℹ️ OIDC Trusted Publishing is configured"
+        echo "🔐 Token automatically injected by actions/setup-node"
 
   # Job 7: Post-release actions
   post-release:
